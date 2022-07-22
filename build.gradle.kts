@@ -23,7 +23,7 @@ subprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile> {
         kotlinOptions {
             jvmTarget = "11"
-            languageVersion = "1.6"
+            languageVersion = "1.7"
         }
     }
 
