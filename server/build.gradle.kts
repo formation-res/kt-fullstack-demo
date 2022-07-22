@@ -37,7 +37,5 @@ dependencies {
     implementation("io.ktor:ktor-server-cors:_")
 
     implementation("ch.qos.logback:logback-classic:_")
-
-    implementation("com.jillesvangurp:search-client:_")
 }
 

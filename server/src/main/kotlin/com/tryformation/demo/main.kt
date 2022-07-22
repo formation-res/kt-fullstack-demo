@@ -31,7 +31,7 @@ fun Application.module() {
     routing {
         route("/") {
             get {
-                call.respond("hi!")
+                call.respond("hi there!")
             }
         }
     }
