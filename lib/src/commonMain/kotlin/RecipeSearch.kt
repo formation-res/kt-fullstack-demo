@@ -2,10 +2,7 @@
 
 package recipesearch
 
-import com.jillesvangurp.ktsearch.ClusterHealthResponse
-import com.jillesvangurp.ktsearch.SearchClient
-import com.jillesvangurp.ktsearch.SearchResponse
-import com.jillesvangurp.ktsearch.clusterHealth
+import com.jillesvangurp.ktsearch.*
 import com.jillesvangurp.ktsearch.repository.IndexRepository
 import com.jillesvangurp.searchdsls.querydsl.bool
 import com.jillesvangurp.searchdsls.querydsl.match
@@ -71,29 +68,12 @@ class RecipeSearch(
         })
     }
 
-
     suspend fun deleteIndex() {
         repository.deleteIndex()
     }
 
-//    suspend fun indexExamples() {
-//        // use a small bulk size to illustrate how this can
-//        // work with potentially large amounts of files.
-//        repository.bulk(bulkSize = 3) {
-////            File("src/examples/resources/recipes")
-////                .listFiles { f -> f.extension == "json" }?.forEach {
-////                val parsed = objectMapper.readValue<Recipe>(it.readText())
-////                // lets use the sourceUrl as an id
-////                // use create=false to allow updates
-////                index(parsed.sourceUrl, parsed, create = false)
-////            }
-//        }
-//    }
-//    // END index_recipes
-//
-
     suspend fun search(text: String, start: Int, hits: Int):
-        RecipeSearchResponse<Recipe> {
+        SearchResults<Recipe> {
             val response: Pair<SearchResponse, Flow<Recipe?>> = repository.search {
                     from = start
                     resultSize = hits
@@ -114,11 +94,11 @@ class RecipeSearch(
                         }
                     }
             }
-        return response.toSearchResponse()
+        return response.toSearchResults()
     }
 
     suspend fun autocomplete(text: String, start: Int, hits: Int):
-        RecipeSearchResponse<Recipe> {
+        SearchResults<Recipe> {
             return repository.search {
                     from = start
                     resultSize = hits
@@ -128,7 +108,17 @@ class RecipeSearch(
                         match("title.autocomplete", text)
                     }
 
-            }.toSearchResponse()
+            }.toSearchResults()
         }
+}
+
+suspend fun <T:Any> Pair<SearchResponse, Flow<T?>>.toSearchResults(): SearchResults<T> {
+    val (r,f) = this
+    val collectedHits = mutableListOf<T>()
+    f.collect {
+        if(it != null)
+            collectedHits.add(it)
+    }
+    return SearchResults(r.total, collectedHits)
 }
 

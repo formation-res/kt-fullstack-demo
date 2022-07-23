@@ -2,6 +2,8 @@
 
 package com.tryformation.demo
 
+import com.jillesvangurp.ktsearch.repository.IndexRepository
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
@@ -9,16 +11,25 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import mu.KotlinLogging
+import org.koin.core.logger.Level
+import org.koin.ktor.ext.inject
+import org.koin.ktor.plugin.Koin
+import org.koin.logger.slf4jLogger
+import recipesearch.Recipe
+import recipesearch.RecipeSearch
 
 fun main(args: Array<String>) {
 
-    // start ktor
+    // start ktor, configuration lives in application.conf
     EngineMain.main(args)
 }
 
-// referenced in application.conf
 fun Application.module() {
     install(ContentNegotiation) {
         json(
@@ -28,12 +39,64 @@ fun Application.module() {
     install(CORS) {
         allowHost("0.0.0.0:9090")
     }
+    install(Koin) {
+        slf4jLogger(level = Level.INFO)
+        modules(searchModule)
+    }
+
     routing {
         route("/") {
             get {
                 call.respond("hi there!")
             }
         }
+        searchRoutes()
+    }
+}
+
+fun Routing.searchRoutes() {
+    val recipeSearch by inject<RecipeSearch>()
+    val repository by inject<IndexRepository<Recipe>>()
+    val logger = KotlinLogging.logger { }
+
+    get("/search") {
+        val query = this.context.request.queryParameters["q"] ?: ""
+        val from = this.context.request.queryParameters["from"]?.toIntOrNull() ?: 0
+        val size = this.context.request.queryParameters["size"]?.toIntOrNull() ?: 10
+        call.respond(recipeSearch.search(text = query, start = from, hits = size))
+    }
+
+    get("/complete") {
+        val query = this.context.request.queryParameters["q"] ?: ""
+        val from = this.context.request.queryParameters["from"]?.toIntOrNull() ?: 0
+        val size = this.context.request.queryParameters["size"]?.toIntOrNull() ?: 10
+        call.respond(recipeSearch.autocomplete(text = query, start = from, hits = size))
+    }
+
+    post("/bootstrap") {
+        repository.deleteIndex()
+        logger.info { "deleted index" }
+        recipeSearch.createNewIndex()
+        logger.info { "created new index" }
+        repository.bulk(bulkSize = 3) {
+            val contextClassLoader = Thread.currentThread().contextClassLoader
+            contextClassLoader
+                .getResourceAsStream("recipes")
+                ?.readAllBytes()
+                ?.decodeToString()
+                ?.lines()
+                ?.filter { it.endsWith(".json") }
+                ?.forEach { file ->
+                    logger.info { "indexing $file" }
+                    val json = contextClassLoader.getResourceAsStream("recipes/$file")?.readAllBytes()
+                        ?.decodeToString() ?: error("$file not found")
+                    val parsed = DEFAULT_JSON.decodeFromString<Recipe>(json)
+                    logger.info { json }
+                    // re-serialize without pretty printing
+                    index(DEFAULT_JSON.encodeToString(Recipe.serializer(), parsed), id = file)
+                }
+        }
+        call.respond(HttpStatusCode.OK)
     }
 }
 

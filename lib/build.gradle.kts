@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
@@ -21,9 +23,10 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common", "_"))
-                implementation(KotlinX.serialization.json)
-                implementation("com.jillesvangurp:search-client:_")
+                api(kotlin("stdlib-common", "_"))
+                api(KotlinX.serialization.json)
+                api("com.jillesvangurp:search-client:_")
+                api("io.github.microutils:kotlin-logging:_")
             }
         }
         val commonTest by getting {
@@ -31,6 +34,7 @@ kotlin {
                 implementation(kotlin("test-common", "_"))
                 implementation(kotlin("test-annotations-common", "_"))
                 implementation(Testing.kotest.assertions.core)
+
             }
         }
         val jvmMain by existing {
