@@ -1,5 +1,5 @@
 
-package v4
+package v5
 
 import TWClasses.submitButton
 import dev.fritz2.core.*
@@ -10,7 +10,7 @@ import org.w3c.dom.HTMLUListElement
 import recipesearch.Recipe
 import stackUp
 
-fun RenderContext.v4UseLibForModels() {
+fun RenderContext.v5UseKtSearch() {
     startKoin {
         modules(searchModule)
     }

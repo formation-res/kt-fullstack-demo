@@ -1,7 +1,7 @@
 import dev.fritz2.core.RenderContext
 import dev.fritz2.core.render
-import v3.v3TalkToOurServer
-import v4.v4UseOurLibrary
+import v4.v4UseLibForModels
+import v5.v5UseKtSearch
 
 fun main() {
     render("#target") {
@@ -10,7 +10,8 @@ fun main() {
 //        v1.v1Prototype()
 //        v2ComponentsAndStores()
 //        v3TalkToOurServer()
-        v4UseOurLibrary()
+//        v4UseLibForModels()
+        v5UseKtSearch()
     }
 }
 
