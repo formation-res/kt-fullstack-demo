@@ -1,17 +1,18 @@
 import dev.fritz2.core.RenderContext
 import dev.fritz2.core.render
-import v4.v4UseLibForModels
-import v5.v5UseKtSearch
+import v6.v6AddTranslations
+
 
 fun main() {
     render("#target") {
 
 //        helloWorld()
-//        v1.v1Prototype()
+//        v1Prototype()
 //        v2ComponentsAndStores()
 //        v3TalkToOurServer()
 //        v4UseLibForModels()
-        v5UseKtSearch()
+//        v5UseKtSearch()
+        v6AddTranslations()
     }
 }
 

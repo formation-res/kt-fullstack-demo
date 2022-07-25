@@ -32,6 +32,10 @@ kotlin {
                 implementation(npm("tailwindcss", "3.0.19"))
                 implementation(npm("@tailwindcss/forms", "0.4.0"))
 
+                // fluent-js
+                implementation(npm("@fluent/bundle", "0.17.1"))
+                implementation(npm("@fluent/sequence", "0.7.0"))
+
                 // webpack
                 implementation(devNpm("postcss", "8.4.6"))
                 implementation(devNpm("postcss-loader", "6.2.1"))
