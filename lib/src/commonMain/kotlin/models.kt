@@ -1,5 +1,6 @@
 package recipesearch
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
@@ -9,11 +10,14 @@ data class Recipe(
     val description: String,
     val ingredients: List<String>,
     val directions: List<String>,
+    @SerialName("prep_time_min")
     val prepTimeMin: Int?,
+    @SerialName("cook_time_min")
     val cookTimeMin: Int?,
     val servings: Int?,
     val tags: List<String>?,
     val author: Author,
+    @SerialName("source_url")
     val sourceUrl: String?
 )
 
