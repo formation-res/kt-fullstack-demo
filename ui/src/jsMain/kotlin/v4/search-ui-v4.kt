@@ -1,5 +1,6 @@
 
-package v3
+package v4
+
 import TWClasses.submitButton
 import dev.fritz2.core.*
 import dev.fritz2.headless.components.inputField
@@ -7,7 +8,7 @@ import lineUp
 import org.koin.core.context.startKoin
 import stackUp
 
-fun RenderContext.v3TalkToOurServer() {
+fun RenderContext.v4UseOurLibrary() {
     startKoin {
         modules(searchModule)
     }
@@ -44,9 +45,22 @@ private fun RenderContext.searchResults() {
     val searchResultStore by koin.inject<SearchResultStore>()
         searchResultStore.data.render {results ->
             if(results != null) {
-                pre {
-                    +results
+                p {
+                    "Found ${results.totalHits} recipes!"
                 }
+                ul {
+                    results.items.forEach {
+                        li {
+                            b {
+                                +it.title
+                            }
+                            +" (${it.author})"
+                            +" ${it.tags?.joinToString(", ")}"
+
+                        }
+                    }
+                }
+
             } else {
                 p {
                     +"Nothing yet"
