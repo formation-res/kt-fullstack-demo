@@ -33,11 +33,16 @@ fun main(args: Array<String>) {
 fun Application.module() {
     install(ContentNegotiation) {
         json(
-            DEFAULT_JSON
+            PRETTY_JSON
         )
     }
     install(CORS) {
-        allowHost("0.0.0.0:9090")
+        allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Post)
+        allowMethod(HttpMethod.Get)
+        allowHeader(HttpHeaders.AccessControlAllowOrigin)
+        allowHeader(HttpHeaders.ContentType)
+        anyHost()
     }
     install(Koin) {
         slf4jLogger(level = Level.INFO)
@@ -80,21 +85,24 @@ fun Routing.searchRoutes() {
         logger.info { "created new index" }
         repository.bulk(bulkSize = 3) {
             val contextClassLoader = Thread.currentThread().contextClassLoader
-            contextClassLoader
-                .getResourceAsStream("recipes")
-                ?.readAllBytes()
-                ?.decodeToString()
-                ?.lines()
-                ?.filter { it.endsWith(".json") }
-                ?.forEach { file ->
-                    logger.info { "indexing $file" }
-                    val json = contextClassLoader.getResourceAsStream("recipes/$file")?.readAllBytes()
-                        ?.decodeToString() ?: error("$file not found")
-                    val parsed = DEFAULT_JSON.decodeFromString<Recipe>(json)
-                    logger.info { json }
-                    // re-serialize without pretty printing
-                    index(DEFAULT_JSON.encodeToString(Recipe.serializer(), parsed), id = file)
-                }
+            // we use blocking file IO here
+            withContext(Dispatchers.IO) {
+                contextClassLoader
+                    .getResourceAsStream("recipes")
+                    ?.readAllBytes()
+                    ?.decodeToString()
+                    ?.lines()
+                    ?.filter { it.endsWith(".json") }
+                    ?.forEach { file ->
+                        logger.info { "indexing $file" }
+                        val json = contextClassLoader.getResourceAsStream("recipes/$file")?.readAllBytes()
+                            ?.decodeToString() ?: error("$file not found")
+                        val parsed = DEFAULT_JSON.decodeFromString<Recipe>(json)
+                        logger.info { json }
+                        // re-serialize without pretty printing
+                        index(DEFAULT_JSON.encodeToString(Recipe.serializer(), parsed), id = file)
+                    }
+            }
         }
         call.respond(HttpStatusCode.OK)
     }
@@ -108,6 +116,23 @@ val DEFAULT_JSON: Json = Json {
     encodeDefaults = true
     // save space
     prettyPrint = false
+    // people adding shit to the json is OK, we're forward compatible and will just ignore it
+    isLenient = true
+    // encoding nulls is meaningless and a waste of space.
+    explicitNulls = false
+    // adding object keys is OK even if older clients won't understand it
+    ignoreUnknownKeys = true
+    // make sure new enum values don't break deserialization (will be null)
+    coerceInputValues = true
+}
+
+@OptIn(ExperimentalSerializationApi::class)
+val PRETTY_JSON: Json = Json {
+    // don't rely on external systems being written in kotlin or even having a language with default values
+    // the default of false is insane and dangerous
+    encodeDefaults = true
+    // save space
+    prettyPrint = true
     // people adding shit to the json is OK, we're forward compatible and will just ignore it
     isLenient = true
     // encoding nulls is meaningless and a waste of space.

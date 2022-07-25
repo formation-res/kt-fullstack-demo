@@ -1,3 +1,5 @@
+package v1
+
 import dev.fritz2.core.RenderContext
 import dev.fritz2.core.placeholder
 import dev.fritz2.core.type

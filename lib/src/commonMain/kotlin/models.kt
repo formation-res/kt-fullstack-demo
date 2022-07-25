@@ -1,8 +1,5 @@
 package recipesearch
 
-import com.jillesvangurp.ktsearch.SearchResponse
-import com.jillesvangurp.ktsearch.total
-import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
 
 

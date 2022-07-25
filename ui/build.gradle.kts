@@ -21,6 +21,8 @@ kotlin {
                 implementation("dev.fritz2:core:_")
                 implementation("dev.fritz2:headless:_")
                 implementation("com.jillesvangurp:search-client:_")
+                implementation(Koin.core)
+                implementation(project(":lib"))
             }
         }
         val jsMain by getting {
