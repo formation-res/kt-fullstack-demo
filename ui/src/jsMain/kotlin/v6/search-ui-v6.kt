@@ -2,12 +2,11 @@ package v6
 
 import TWClasses
 import TWClasses.submitButton
-import dev.fritz2.core.HtmlTag
-import dev.fritz2.core.RenderContext
-import dev.fritz2.core.href
-import dev.fritz2.core.target
+import dev.fritz2.core.*
 import dev.fritz2.headless.components.inputField
+import dev.fritz2.headless.components.listbox
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import lineUp
 import v6.localization.LocalizationUtil
@@ -16,6 +15,7 @@ import org.koin.core.context.startKoin
 import org.w3c.dom.HTMLUListElement
 import recipesearch.Recipe
 import stackUp
+import v6.localization.Locale
 import v6.localization.Translatable
 import kotlin.js.json
 
@@ -46,6 +46,7 @@ fun RenderContext.v6AddTranslations() {
 
 private fun RenderContext.searchUi() {
     val translation by koin.inject<Translation>()
+    val selectedCode = storeOf("nl-NL")
     div("container mx-auto font-sans") {
         // components are extension functions
         stackUp {
@@ -54,6 +55,14 @@ private fun RenderContext.searchUi() {
             }
             searchForm()
             searchResults()
+            button {
+                +"NL"
+                clicks.map { "nl-NL" } handledBy translation.updateLocale
+            }
+            button {
+                +"EN"
+                clicks.map { "en-GB" } handledBy translation.updateLocale
+            }
         }
     }
 }

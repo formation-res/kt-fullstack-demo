@@ -18,15 +18,26 @@ class Translation(
     operator fun get(translatable: Translatable, json: Json? = null): Flow<String> {
         return data.map { it.translate(translatable.messageId, json) }
     }
+
     operator fun get(translatable: Translatable, jsonFlow: Flow<Json>): Flow<String> {
         return data.combine(jsonFlow) { bundleSeq, json -> bundleSeq.translate(translatable.messageId, json) }
     }
+
     fun getString(translatable: Translatable, json: Json? = null): String {
         return current.translate(translatable.messageId, json)
     }
 
+    val updateLocale = handle<String> { old, code ->
+        val locale = Locale.getByIdOrNull(code)
+        if (locale != null) {
+            LocalizationUtil.loadBundleSequence(listOf(locale))
+        } else {
+            old
+        }
+    }
+
     private val setLocale = handle<Locale?> { current, locale ->
-        if(locale != null) {
+        if (locale != null) {
             console.log("switching locale", locale)
             LocalizationUtil.loadBundleSequence(listOf(locale))
         } else current
