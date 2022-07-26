@@ -28,7 +28,7 @@ object LocalizationUtil {
 
     suspend fun loadBundleSequence(locales: List<Locale>, fallback: Locale?= Locale.EN_GB): BundleSequence {
         return if(fallback != null) {
-            console.log("loading locales: $locales and fallback: $fallback")
+//            console.log("loading locales: $locales and fallback: $fallback")
             (locales + fallback).distinct().map { locale ->
                 loadBundle(locale)
             }.toTypedArray()

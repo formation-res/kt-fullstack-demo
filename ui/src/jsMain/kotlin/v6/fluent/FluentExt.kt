@@ -1,4 +1,4 @@
-@file:Suppress("UnsafeCastFromDynamic")
+@file:Suppress("UnsafeCastFromDynamic", "UNUSED_PARAMETER", "unused")
 
 package v6.fluent
 

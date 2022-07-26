@@ -5,6 +5,7 @@ import TWClasses.submitButton
 import dev.fritz2.core.*
 import dev.fritz2.headless.components.inputField
 import dev.fritz2.headless.components.listbox
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -31,12 +32,13 @@ enum class UiTexts : Translatable {
     override val prefix: String = "demo"
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 fun RenderContext.v6AddTranslations() {
     GlobalScope.launch {
         startKoin {
             modules(searchModule)
         }
-        // little hack to get this to load in a co-routine scope
+        // little hack to get this to load in a co-routine scope because resource loading is suspending
         koin.declare(LocalizationUtil.load())
 
         searchUi()
@@ -46,7 +48,6 @@ fun RenderContext.v6AddTranslations() {
 
 private fun RenderContext.searchUi() {
     val translation by koin.inject<Translation>()
-    val selectedCode = storeOf("nl-NL")
     div("container mx-auto font-sans") {
         // components are extension functions
         stackUp {
@@ -55,13 +56,15 @@ private fun RenderContext.searchUi() {
             }
             searchForm()
             searchResults()
-            button {
-                +"NL"
-                clicks.map { "nl-NL" } handledBy translation.updateLocale
-            }
-            button {
-                +"EN"
-                clicks.map { "en-GB" } handledBy translation.updateLocale
+            lineUp {
+                button {
+                    +"NL"
+                    clicks.map { "nl-NL" } handledBy translation.updateLocale
+                }
+                button {
+                    +"EN"
+                    clicks.map { "en-GB" } handledBy translation.updateLocale
+                }
             }
         }
     }
@@ -97,7 +100,7 @@ private fun RenderContext.searchResults() {
     searchResultStore.data.render { results ->
         if (results != null) {
             p {
-                translation[UiTexts.FoundResults, json("amount" to results.totalHits)].renderText(this)
+                translation[UiTexts.FoundResults, json("amount" to results.totalHits.toString())].renderText(this)
             }
             ul {
                 results.items.forEach {

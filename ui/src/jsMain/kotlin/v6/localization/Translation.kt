@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package v6.localization
 
 import dev.fritz2.core.RootStore
@@ -38,12 +40,13 @@ class Translation(
 
     private val setLocale = handle<Locale?> { current, locale ->
         if (locale != null) {
-            console.log("switching locale", locale)
             LocalizationUtil.loadBundleSequence(listOf(locale))
-        } else current
+        } else {
+            current
+        }
     }
 
     init {
-        languageCode.data.map { it?.let { code -> Locale.getByIdOrNull(code) } } handledBy setLocale
+        languageCode.data.map { it.let { code -> Locale.getByIdOrNull(code) } } handledBy setLocale
     }
 }
