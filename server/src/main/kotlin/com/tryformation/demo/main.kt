@@ -2,6 +2,7 @@
 
 package com.tryformation.demo
 
+import com.jillesvangurp.ktsearch.index
 import com.jillesvangurp.ktsearch.repository.IndexRepository
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
@@ -97,10 +98,10 @@ fun Routing.searchRoutes() {
                         logger.info { "indexing $file" }
                         val json = contextClassLoader.getResourceAsStream("recipes/$file")?.readAllBytes()
                             ?.decodeToString() ?: error("$file not found")
-                        val parsed = DEFAULT_JSON.decodeFromString<Recipe>(json)
+                        val recipe = DEFAULT_JSON.decodeFromString<Recipe>(json)
                         logger.info { json }
                         // re-serialize without pretty printing
-                        index(DEFAULT_JSON.encodeToString(Recipe.serializer(), parsed), id = file)
+                        index(recipe, id = file)
                     }
             }
         }
