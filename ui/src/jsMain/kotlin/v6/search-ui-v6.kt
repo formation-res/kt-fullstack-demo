@@ -10,6 +10,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import lineUp
+import org.koin.core.context.GlobalContext
 import v6.localization.LocalizationUtil
 import v6.localization.Translation
 import org.koin.core.context.startKoin
@@ -34,6 +35,7 @@ enum class UiTexts : Translatable {
 
 @OptIn(DelicateCoroutinesApi::class)
 fun RenderContext.v6AddTranslations() {
+    GlobalContext.stopKoin()
     GlobalScope.launch {
         startKoin {
             modules(searchModule)

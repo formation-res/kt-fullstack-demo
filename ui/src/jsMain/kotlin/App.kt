@@ -1,18 +1,28 @@
 import dev.fritz2.core.RenderContext
 import dev.fritz2.core.render
+import dev.fritz2.routing.routerOf
+import v1.v1Prototype
+import v2.v2ComponentsAndStores
+import v3.v3TalkToOurServer
+import v4.v4UseLibForModels
+import v5.v5UseKtSearch
 import v6.v6AddTranslations
 
+val router = routerOf("hi")
 
 fun main() {
     render("#target") {
-
-//        helloWorld()
-//        v1Prototype()
-//        v2ComponentsAndStores()
-//        v3TalkToOurServer()
-//        v4UseLibForModels()
-//        v5UseKtSearch()
-        v6AddTranslations()
+        router.data.render { page ->
+            when(page) {
+                "hi" -> helloWorld()
+                "1" -> v1Prototype()
+                "2" -> v2ComponentsAndStores()
+                "3" -> v3TalkToOurServer()
+                "4" -> v4UseLibForModels()
+                "5" -> v5UseKtSearch()
+                "6" -> v6AddTranslations()
+            }
+        }
     }
 }
 

@@ -4,10 +4,12 @@ import TWClasses.submitButton
 import dev.fritz2.core.*
 import dev.fritz2.headless.components.inputField
 import lineUp
+import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 import stackUp
 
 fun RenderContext.v3TalkToOurServer() {
+    GlobalContext.stopKoin()
     startKoin {
         modules(searchModule)
     }

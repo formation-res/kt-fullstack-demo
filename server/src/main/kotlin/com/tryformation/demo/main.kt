@@ -4,6 +4,7 @@ package com.tryformation.demo
 
 import com.jillesvangurp.ktsearch.index
 import com.jillesvangurp.ktsearch.repository.IndexRepository
+import io.ktor.client.plugins.logging.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -46,9 +47,10 @@ fun Application.module() {
         anyHost()
     }
     install(Koin) {
-        slf4jLogger(level = Level.INFO)
+        slf4jLogger(level = Level.DEBUG)
         modules(searchModule)
     }
+
 
     routing {
         route("/") {
@@ -69,7 +71,9 @@ fun Routing.searchRoutes() {
         val query = this.context.request.queryParameters["q"] ?: ""
         val from = this.context.request.queryParameters["from"]?.toIntOrNull() ?: 0
         val size = this.context.request.queryParameters["size"]?.toIntOrNull() ?: 10
-        call.respond(recipeSearch.search(text = query, start = from, hits = size))
+        call.respond(recipeSearch.search(text = query, start = from, hits = size)).also {
+            logger.info { "Searched for '$query'" }
+        }
     }
 
     get("/complete") {

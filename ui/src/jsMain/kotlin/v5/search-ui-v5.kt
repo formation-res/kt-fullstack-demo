@@ -5,12 +5,14 @@ import TWClasses.submitButton
 import dev.fritz2.core.*
 import dev.fritz2.headless.components.inputField
 import lineUp
+import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 import org.w3c.dom.HTMLUListElement
 import recipesearch.Recipe
 import stackUp
 
 fun RenderContext.v5UseKtSearch() {
+    GlobalContext.stopKoin()
     startKoin {
         modules(searchModule)
     }
