@@ -50,7 +50,7 @@ private fun RenderContext.searchResults() {
         searchResultStore.data.render {results ->
             if(results != null) {
                 p {
-                    "Found ${results.totalHits} recipes!"
+                    +"Found ${results.totalHits} recipes!"
                 }
                 ul {
                     results.items.forEach {
