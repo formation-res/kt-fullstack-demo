@@ -8,7 +8,6 @@ import com.jillesvangurp.searchdsls.querydsl.bool
 import com.jillesvangurp.searchdsls.querydsl.match
 import com.jillesvangurp.searchdsls.querydsl.matchAll
 import com.jillesvangurp.searchdsls.querydsl.matchPhrase
-import kotlinx.coroutines.flow.Flow
 
 class RecipeSearch(
     private val repository: IndexRepository<Recipe>,
@@ -21,27 +20,6 @@ class RecipeSearch(
 
     suspend fun createNewIndex() {
         repository.createIndex(block = {
-            settings {
-                replicas = 0
-                shards = 1
-                // we have some syntactic sugar for adding custom analysis
-                // however we don't hava a complete DSL for this
-                // so we fall back to using put for things
-                // not in the DSL
-                addTokenizer("autocomplete") {
-                    put("type", "edge_ngram")
-                    put("min_gram", 2)
-                    put("max_gram", 10)
-                    put("token_chars", listOf("letter"))
-                }
-                addAnalyzer("autocomplete") {
-                    put("tokenizer", "autocomplete")
-                    put("filter", listOf("lowercase"))
-                }
-                addAnalyzer("autocomplete_search") {
-                    put("tokenizer", "lowercase")
-                }
-            }
             mappings {
                 text("allfields")
                 text("title") {
@@ -65,6 +43,27 @@ class RecipeSearch(
                     keyword("url")
                 }
             }
+            settings {
+                replicas = 0
+                shards = 1
+                // we have some syntactic sugar for adding custom analysis
+                // however we don't hava a complete DSL for this
+                // so we fall back to using put for things
+                // not in the DSL
+                addTokenizer("autocomplete") {
+                    put("type", "edge_ngram")
+                    put("min_gram", 2)
+                    put("max_gram", 10)
+                    put("token_chars", listOf("letter"))
+                }
+                addAnalyzer("autocomplete") {
+                    put("tokenizer", "autocomplete")
+                    put("filter", listOf("lowercase"))
+                }
+                addAnalyzer("autocomplete_search") {
+                    put("tokenizer", "lowercase")
+                }
+            }
         })
     }
 
@@ -74,7 +73,7 @@ class RecipeSearch(
 
     suspend fun search(text: String, start: Int, hits: Int):
         SearchResults<Recipe> {
-            val response: Pair<SearchResponse, Flow<Recipe?>> = repository.search {
+            val response = repository.search {
                     from = start
                     resultSize = hits
                     query = if(text.isBlank()) {
@@ -112,13 +111,13 @@ class RecipeSearch(
         }
 }
 
-suspend fun <T:Any> Pair<SearchResponse, Flow<T?>>.toSearchResults(): SearchResults<T> {
-    val (r,f) = this
+inline fun <reified T:Any> SearchResponse.toSearchResults(): SearchResults<T> {
+    val response = this
     val collectedHits = mutableListOf<T>()
-    f.collect {
+    response.parseHits<T>().forEach {
         if(it != null)
             collectedHits.add(it)
     }
-    return SearchResults(r.total, collectedHits)
+    return SearchResults(response.total, collectedHits)
 }
 
