@@ -5,7 +5,7 @@ This demo was created to support presentations at the Kotlin Virtual User group 
 The project implements a little recipe search engine to demonstrate a few things:
 
 1. How awesome multi platform Kotlin is and how you can use it as a Fullstack platform.
-1. Our **kt-search** client for Opensearch and Elasticsearch. This was developed over many years by FORMATION CTO Jilles and we use this for our main app as well.
+1. Our **[kt-search](https://github.com/jillesvangurp/kt-search)** client for Opensearch and Elasticsearch. This was developed over many years by FORMATION CTO Jilles and we use this for our main app as well.
 1. How build frontend code with Kotlin and how to structure it properly
 1. How to integrate both kotlin multi platform libraries and javascript npms in Kotlin-js
 
@@ -13,7 +13,7 @@ The project has three kotlin modules:
 
 - `lib`: this is a small multi platform kotlin library that is used in both server and ui
 - `server`: a small ktor server that implements a REST API
-- `ui`: a Fritz2 based web application
+- `ui`: a [Fritz2](https://www.fritz2.dev/) based web application
 
 ## Getting started
 
