@@ -16,6 +16,7 @@ subprojects {
         maven("https://maven.tryformation.com/releases") {
             content {
                 includeGroup("com.jillesvangurp")
+                includeGroup("com.tryformation")
             }
         }
     }

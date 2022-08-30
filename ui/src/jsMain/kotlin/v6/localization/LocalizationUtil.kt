@@ -1,21 +1,20 @@
 package v6.localization
 
+import com.tryformation.fluent.BundleSequence
+import com.tryformation.fluent.FluentBundle
+import com.tryformation.fluent.FluentResource
 import dev.fritz2.remote.http
-import v6.fluent.BundleSequence
-import v6.fluent.FluentBundle
-import v6.fluent.FluentResource
 import kotlinx.browser.window
 
 object LocalizationUtil {
-    suspend fun load(): Translation {
-        val locales: List<Locale> = window.navigator.language.let { langId ->
-            Locale.getByIdOrNull(langId)?.let { listOf(it) }
-        } ?: window.navigator.languages.mapNotNull { langId ->
-            Locale.getByIdOrNull(langId)
-        }.takeIf { it.isNotEmpty() }
-        ?: emptyList()
+    suspend fun load(fallback: String = Locales.EN_GB.id): TranslationService {
+        val languages = (window.navigator.language.let { listOf(it) } + window.navigator.languages.toList()).distinct()
+        console.log("browser languages: ${languages.joinToString(",")}")
 
-        return Translation(loadBundleSequence(locales.distinct()))
+        val best = languages.firstOrNull {
+            Locales.getByIdOrNull(it) != null
+        }
+        return TranslationService(loadBundleSequence(listOfNotNull(best), fallback))
     }
 
     private val baseUrl = window.location.let { l ->
@@ -26,31 +25,35 @@ object LocalizationUtil {
         }
     }
 
-    suspend fun loadBundleSequence(locales: List<Locale>, fallback: Locale?= Locale.EN_GB): BundleSequence {
-        return if(fallback != null) {
+    suspend fun loadBundleSequence(locales: List<String>, fallback: String?): BundleSequence {
+        return if (fallback != null) {
 //            console.log("loading locales: $locales and fallback: $fallback")
-            (locales + fallback).distinct().map { locale ->
+            (locales + fallback).distinct().mapNotNull { locale ->
                 loadBundle(locale)
             }.toTypedArray()
         } else {
-            locales.map { loadBundle(it) }.toTypedArray()
+            locales.map { loadBundle(it) ?: error("$it not found") }.toTypedArray()
         }
     }
 
-    suspend fun loadBundle(locale: Locale): FluentBundle {
-        val url = "$baseUrl/${locale.id}.ftl"
-        val ftlContent = http(url).get().body()
+    suspend fun loadBundle(locale: String): FluentBundle? {
+        val url = "$baseUrl/${locale}.ftl"
+        return try {
+            val ftlContent = http(url).get().body()
 
-        val resource = FluentResource(ftlContent)
-        val bundle = FluentBundle(locale.id)
-        val errors = bundle.addResource(resource)
-        if (errors.isNotEmpty()) {
-            // Syntax errors are per-message and don't break the whole resource
-            errors.forEach {
-                console.error(it)
+            val resource = FluentResource(ftlContent)
+            val bundle = FluentBundle(locale)
+            val errors = bundle.addResource(resource)
+            if (errors.isNotEmpty()) {
+                // Syntax errors are per-message and don't break the whole resource
+                errors.forEach {
+                    console.error(locale, it)
+                }
             }
+            bundle
+        } catch (e: Exception) {
+            null
         }
-        return bundle
     }
 }
 

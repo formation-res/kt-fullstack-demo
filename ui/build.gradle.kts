@@ -33,8 +33,9 @@ kotlin {
                 implementation(npm("@tailwindcss/forms", "0.4.0"))
 
                 // fluent-js
-                implementation(npm("@fluent/bundle", "0.17.1"))
-                implementation(npm("@fluent/sequence", "0.7.0"))
+                implementation("com.tryformation:fluent-kotlin:_")
+//                implementation(npm("@fluent/bundle", "0.17.1"))
+//                implementation(npm("@fluent/sequence", "0.7.0"))
 
                 // webpack
                 implementation(devNpm("postcss", "8.4.6"))
@@ -54,7 +55,6 @@ ksp {
 
 }
 
-kotlin.sourceSets.commonMain { kotlin.srcDir("build/generated/ksp/commonMain/kotlin") }
 
 // Fixes webpack-cli incompatibility by pinning the newest version.
 // https://youtrack.jetbrains.com/issue/KTIJ-22030

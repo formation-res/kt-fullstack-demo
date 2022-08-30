@@ -46,22 +46,21 @@ class RecipeSearch(
             settings {
                 replicas = 0
                 shards = 1
-                // we have some syntactic sugar for adding custom analysis
-                // however we don't hava a complete DSL for this
-                // so we fall back to using put for things
-                // not in the DSL
-                addTokenizer("autocomplete") {
-                    put("type", "edge_ngram")
-                    put("min_gram", 2)
-                    put("max_gram", 10)
-                    put("token_chars", listOf("letter"))
-                }
-                addAnalyzer("autocomplete") {
-                    put("tokenizer", "autocomplete")
-                    put("filter", listOf("lowercase"))
-                }
-                addAnalyzer("autocomplete_search") {
-                    put("tokenizer", "lowercase")
+                analysis {
+                    tokenizer("autocomplete") {
+                        type = "edge_ngram"
+                        put("min_gram", 2)
+                        put("max_gram", 10)
+                        put("token_chars", listOf("letter"))
+                    }
+
+                    analyzer("autocomplete") {
+                        put("tokenizer", "autocomplete")
+                        put("filter", listOf("lowercase"))
+                    }
+                    analyzer("autocomplete_search") {
+                        put("tokenizer", "lowercase")
+                    }
                 }
             }
         })
@@ -81,7 +80,7 @@ class RecipeSearch(
                     } else {
                         bool {
                             should(
-                                matchPhrase("title", text) {
+                                matchPhrase(Recipe::title, text) {
                                     boost=2.0
                                 },
                                 match("title", text) {
@@ -90,6 +89,7 @@ class RecipeSearch(
                                 },
                                 match("description", text)
                             )
+                            this["foo"] = "bar"
                         }
                     }
             }

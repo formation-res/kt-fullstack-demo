@@ -2,8 +2,11 @@
 
 package com.tryformation.demo
 
+import com.jillesvangurp.ktsearch.asBucketAggregationResult
 import com.jillesvangurp.ktsearch.index
 import com.jillesvangurp.ktsearch.repository.IndexRepository
+import com.jillesvangurp.searchdsls.querydsl.TermsAgg
+import com.jillesvangurp.searchdsls.querydsl.agg
 import io.ktor.client.plugins.logging.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
@@ -111,6 +114,23 @@ fun Routing.searchRoutes() {
         }
         call.respond(HttpStatusCode.OK)
     }
+
+    get("/aggs") {
+        val response = repository.search {
+            agg("by_tag", TermsAgg(Recipe::tags))
+        }
+        call.respond(response.aggregations["by_tag"]?.asBucketAggregationResult()?:error("oops"))
+    }
+
+    get("/q") {
+        val response = repository.search {
+            resultSize=10
+//            agg("by_tag", TermsAgg(Recipe::tags))
+        }
+        call.respond(response.aggregations["by_tag"]?.asBucketAggregationResult()?:error("oops"))
+//        call.respond(response)
+    }
+
 }
 
 // kotlinx serialization defaults are actively harmful

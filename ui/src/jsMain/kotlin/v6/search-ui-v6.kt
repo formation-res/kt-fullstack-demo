@@ -2,9 +2,9 @@ package v6
 
 import TWClasses
 import TWClasses.submitButton
+import com.tryformation.localization.Translatable
 import dev.fritz2.core.*
 import dev.fritz2.headless.components.inputField
-import dev.fritz2.headless.components.listbox
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.map
@@ -12,13 +12,12 @@ import kotlinx.coroutines.launch
 import lineUp
 import org.koin.core.context.GlobalContext
 import v6.localization.LocalizationUtil
-import v6.localization.Translation
+import v6.localization.TranslationService
 import org.koin.core.context.startKoin
 import org.w3c.dom.HTMLUListElement
 import recipesearch.Recipe
 import stackUp
-import v6.localization.Locale
-import v6.localization.Translatable
+import v6.localization.Locales
 import kotlin.js.json
 
 enum class UiTexts : Translatable {
@@ -49,23 +48,23 @@ fun RenderContext.v6AddTranslations() {
 }
 
 private fun RenderContext.searchUi() {
-    val translation by koin.inject<Translation>()
+    val translationService by koin.inject<TranslationService>()
     div("container mx-auto font-sans") {
         // components are extension functions
         stackUp {
             h1("text-2xl center") {
-                translation[UiTexts.Title].renderText(this)
+                translationService[UiTexts.Title].renderText(this)
             }
             searchForm()
             searchResults()
             lineUp {
                 button {
                     +"NL"
-                    clicks.map { "nl-NL" } handledBy translation.updateLocale
+                    clicks.map { Locales.NL_NL.id } handledBy translationService.updateLocale
                 }
                 button {
                     +"EN"
-                    clicks.map { "en-GB" } handledBy translation.updateLocale
+                    clicks.map { Locales.EN_GB.id } handledBy translationService.updateLocale
                 }
             }
         }
@@ -75,34 +74,34 @@ private fun RenderContext.searchUi() {
 private fun RenderContext.searchForm() {
     val searchResultStore by koin.inject<SearchResultStore>()
     val queryTextStore by koin.inject<QueryTextStore>()
-    val translation by koin.inject<Translation>()
+    val translationService by koin.inject<TranslationService>()
 
     lineUp {
         // placeholder takes a string, not a flow so we render the flow of translations
-        translation[UiTexts.Cheese].render { tl ->
+        translationService[UiTexts.Cheese].render { tl ->
             inputField(TWClasses.defaultSpaceX) {
                 value(queryTextStore)
                 type("text")
                 placeholder(tl)
-                label { translation[UiTexts.Query].renderText(this) }
+                label { translationService[UiTexts.Query].renderText(this) }
                 inputTextfield { }
             }
         }
         button(submitButton) {
-            translation[UiTexts.SearchButton].renderText(this)
+            translationService[UiTexts.SearchButton].renderText(this)
             clicks handledBy searchResultStore.search
         }
     }
 }
 
 private fun RenderContext.searchResults() {
-    val translation by koin.inject<Translation>()
+    val translationService by koin.inject<TranslationService>()
 
     val searchResultStore by koin.inject<SearchResultStore>()
     searchResultStore.data.render { results ->
         if (results != null) {
             p {
-                translation[UiTexts.FoundResults, json("amount" to results.totalHits.toString())].renderText(this)
+                translationService[UiTexts.FoundResults, json("amount" to results.totalHits.toString())].renderText(this)
             }
             ul {
                 results.items.forEach {
@@ -112,7 +111,7 @@ private fun RenderContext.searchResults() {
 
         } else {
             p {
-                translation[UiTexts.EmptySearch].renderText(this)
+                translationService[UiTexts.EmptySearch].renderText(this)
             }
         }
     }
