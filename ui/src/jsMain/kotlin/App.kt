@@ -12,16 +12,24 @@ val router = routerOf("hi")
 
 fun main() {
     render("#target") {
-        router.data.render { page ->
-            when(page) {
-                "hi" -> helloWorld()
-                "1" -> v1Prototype()
-                "2" -> v2ComponentsAndStores()
-                "3" -> v3TalkToOurServer()
-                "4" -> v4UseLibForModels()
-                "5" -> v5UseKtSearch()
-                "6" -> v6AddTranslations()
+        div("flex flex-col h-screen justify-between") {
+            div("mb-auto") {
+                router.data.render { page ->
+                    when(page) {
+                        "hi" -> helloWorld()
+                        "1" -> v1Prototype()
+                        "2" -> v2ComponentsAndStores()
+                        "3" -> v3TalkToOurServer()
+                        "4" -> v4UseLibForModels()
+                        "5" -> v5UseKtSearch()
+                        "6" -> v6AddTranslations()
+                    }
+                }
             }
+            div("h-10") {
+                navigation()
+            }
+
         }
     }
 }

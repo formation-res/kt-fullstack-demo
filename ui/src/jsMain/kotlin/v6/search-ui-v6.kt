@@ -11,8 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import lineUp
 import org.koin.core.context.GlobalContext
-import v6.localization.LocalizationUtil
-import v6.localization.TranslationService
+import v6.localization.TranslationStore
 import org.koin.core.context.startKoin
 import org.w3c.dom.HTMLUListElement
 import recipesearch.Recipe
@@ -40,7 +39,7 @@ fun RenderContext.v6AddTranslations() {
             modules(searchModule)
         }
         // little hack to get this to load in a co-routine scope because resource loading is suspending
-        koin.declare(LocalizationUtil.load())
+        koin.declare(TranslationStore.load(fallback = "en-GB"))
 
         searchUi()
 
@@ -48,23 +47,23 @@ fun RenderContext.v6AddTranslations() {
 }
 
 private fun RenderContext.searchUi() {
-    val translationService by koin.inject<TranslationService>()
+    val translationStore by koin.inject<TranslationStore>()
     div("container mx-auto font-sans") {
         // components are extension functions
         stackUp {
             h1("text-2xl center") {
-                translationService[UiTexts.Title].renderText(this)
+                translationStore[UiTexts.Title].renderText(this)
             }
             searchForm()
             searchResults()
             lineUp {
                 button {
                     +"NL"
-                    clicks.map { Locales.NL_NL.id } handledBy translationService.updateLocale
+                    clicks.map { Locales.NL_NL.id } handledBy translationStore.updateLocale
                 }
                 button {
                     +"EN"
-                    clicks.map { Locales.EN_GB.id } handledBy translationService.updateLocale
+                    clicks.map { Locales.EN_GB.id } handledBy translationStore.updateLocale
                 }
             }
         }
@@ -74,34 +73,34 @@ private fun RenderContext.searchUi() {
 private fun RenderContext.searchForm() {
     val searchResultStore by koin.inject<SearchResultStore>()
     val queryTextStore by koin.inject<QueryTextStore>()
-    val translationService by koin.inject<TranslationService>()
+    val translationStore by koin.inject<TranslationStore>()
 
     lineUp {
         // placeholder takes a string, not a flow so we render the flow of translations
-        translationService[UiTexts.Cheese].render { tl ->
+        translationStore[UiTexts.Cheese].render { tl ->
             inputField(TWClasses.defaultSpaceX) {
                 value(queryTextStore)
                 type("text")
                 placeholder(tl)
-                label { translationService[UiTexts.Query].renderText(this) }
+                label { translationStore[UiTexts.Query].renderText(this) }
                 inputTextfield { }
             }
         }
         button(submitButton) {
-            translationService[UiTexts.SearchButton].renderText(this)
+            translationStore[UiTexts.SearchButton].renderText(this)
             clicks handledBy searchResultStore.search
         }
     }
 }
 
 private fun RenderContext.searchResults() {
-    val translationService by koin.inject<TranslationService>()
+    val translationStore by koin.inject<TranslationStore>()
 
     val searchResultStore by koin.inject<SearchResultStore>()
     searchResultStore.data.render { results ->
         if (results != null) {
             p {
-                translationService[UiTexts.FoundResults, json("amount" to results.totalHits.toString())].renderText(this)
+                translationStore[UiTexts.FoundResults, json("amount" to results.totalHits.toString())].renderText(this)
             }
             ul {
                 results.items.forEach {
@@ -111,7 +110,7 @@ private fun RenderContext.searchResults() {
 
         } else {
             p {
-                translationService[UiTexts.EmptySearch].renderText(this)
+                translationStore[UiTexts.EmptySearch].renderText(this)
             }
         }
     }
