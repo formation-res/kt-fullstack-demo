@@ -23,15 +23,17 @@ class TranslationStore(
     private val languageCodeStore = storeOf(defaultLanguage)
 
     operator fun get(translatable: Translatable, json: Json? = null): Flow<String> {
-        return data.map { it.translate(translatable.messageId, json) }
+        return data.map { bundleSequence ->
+            bundleSequence.translate(translatable, json)
+        }
     }
 
     operator fun get(translatable: Translatable, jsonFlow: Flow<Json>): Flow<String> {
-        return data.combine(jsonFlow) { bundleSeq, json -> bundleSeq.translate(translatable.messageId, json) }
+        return data.combine(jsonFlow) { bundleSeq, json -> bundleSeq.translate(translatable, json) }
     }
 
     fun getString(translatable: Translatable, json: Json? = null): String {
-        return current.translate(translatable.messageId, json)
+        return current.translate(translatable, json)
     }
 
     val updateLocale = handle<String> { old, code ->
@@ -45,7 +47,7 @@ class TranslationStore(
 
     private val setLocale = handle<Locales?> { current, locale ->
         if (locale != null) {
-            loadBundleSequence(listOf(locale.id),defaultLanguage)
+            loadBundleSequence(listOf(locale.id), defaultLanguage)
         } else {
             current
         }
@@ -57,7 +59,8 @@ class TranslationStore(
 
     companion object {
         suspend fun load(fallback: String): TranslationStore {
-            val languages = (window.navigator.language.let { listOf(it) } + window.navigator.languages.toList()).distinct()
+            val languages =
+                (window.navigator.language.let { listOf(it) } + window.navigator.languages.toList()).distinct()
             console.log("browser languages: ${languages.joinToString(",")}")
 
             val best = languages.firstOrNull {
