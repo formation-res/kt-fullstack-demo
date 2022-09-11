@@ -3,7 +3,10 @@ package v6
 import TWClasses
 import TWClasses.submitButton
 import com.tryformation.localization.Translatable
-import dev.fritz2.core.*
+import dev.fritz2.core.HtmlTag
+import dev.fritz2.core.RenderContext
+import dev.fritz2.core.href
+import dev.fritz2.core.target
 import dev.fritz2.headless.components.inputField
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -11,13 +14,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import lineUp
 import org.koin.core.context.GlobalContext
-import v6.localization.TranslationStore
 import org.koin.core.context.startKoin
 import org.w3c.dom.HTMLUListElement
 import recipesearch.Recipe
 import stackUp
 import v6.localization.Locales
-import kotlin.js.json
+import v6.localization.TranslationStore
 
 enum class UiTexts : Translatable {
     Title,
@@ -100,14 +102,13 @@ private fun RenderContext.searchResults() {
     searchResultStore.data.render { results ->
         if (results != null) {
             p {
-                translationStore[UiTexts.FoundResults, json("amount" to results.totalHits.toString())].renderText(this)
+                translationStore[UiTexts.FoundResults, mapOf("amount" to results.totalHits.toString())].renderText(this)
             }
             ul {
                 results.items.forEach {
                     recipeResultComponent(it)
                 }
             }
-
         } else {
             p {
                 translationStore[UiTexts.EmptySearch].renderText(this)
