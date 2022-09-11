@@ -2,10 +2,6 @@
 
 package v6.localization
 
-import com.tryformation.fluent.BundleSequence
-import com.tryformation.fluent.FluentBundle
-import com.tryformation.fluent.FluentResource
-import com.tryformation.fluent.translate
 import com.tryformation.localization.LocalizedTranslationBundleSequence
 import com.tryformation.localization.LocalizedTranslationBundleSequenceProvider
 import com.tryformation.localization.Translatable
@@ -16,8 +12,6 @@ import kotlinx.browser.window
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
-import v6.koin
-import kotlin.js.Json
 
 class TranslationStore(
     bundleSequence: LocalizedTranslationBundleSequence,
@@ -41,7 +35,7 @@ class TranslationStore(
         return current.translate(translatable, args = json).message
     }
 
-    val updateLocale = handle<String> { old, newLocale ->
+    val updateLocale = handle<String> { _, newLocale ->
         provider.loadBundleSequence(listOf(newLocale), defaultLanguage, ::fetchFtl)
     }
 
