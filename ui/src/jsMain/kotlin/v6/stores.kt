@@ -1,6 +1,7 @@
 package v6
 
 import dev.fritz2.core.RootStore
+import koin
 import recipesearch.Recipe
 import recipesearch.RecipeSearch
 import recipesearch.SearchResults

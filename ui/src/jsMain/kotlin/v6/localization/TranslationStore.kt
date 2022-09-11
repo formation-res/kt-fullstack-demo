@@ -79,5 +79,4 @@ class TranslationStore(
             return TranslationStore(provider.loadBundleSequence(listOfNotNull(best), fallback, ::fetchFtl))
         }
     }
-
 }

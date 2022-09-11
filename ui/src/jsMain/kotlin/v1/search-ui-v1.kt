@@ -7,7 +7,7 @@ import dev.fritz2.core.type
 // Our first prototype
 
 fun RenderContext.v1Prototype() {
-    // back to brutalist design ...
+    // brutalist design ...
     h1 { +"Recipe Search Engine" }
     div {
 

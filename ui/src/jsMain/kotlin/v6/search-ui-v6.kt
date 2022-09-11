@@ -1,13 +1,14 @@
 package v6
 
-import TWClasses
-import TWClasses.submitButton
+import TailWindClasses
+import TailWindClasses.submitButton
 import com.tryformation.localization.Translatable
 import dev.fritz2.core.HtmlTag
 import dev.fritz2.core.RenderContext
 import dev.fritz2.core.href
 import dev.fritz2.core.target
 import dev.fritz2.headless.components.inputField
+import koin
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.map
@@ -21,18 +22,10 @@ import stackUp
 import v6.localization.Locales
 import v6.localization.TranslationStore
 
-enum class UiTexts : Translatable {
-    Title,
-    Cheese,
-    Query,
-    SearchButton,
-    EmptySearch,
-    FoundResults
-    ;
 
-    override val prefix: String = "demo"
-}
-
+/**
+ * Add fluent-js via fluent-kotlin to add translations for different languages.
+ */
 @OptIn(DelicateCoroutinesApi::class)
 fun RenderContext.v6AddTranslations() {
     GlobalContext.stopKoin()
@@ -44,8 +37,23 @@ fun RenderContext.v6AddTranslations() {
         koin.declare(TranslationStore.load(fallback = "en-GB"))
 
         searchUi()
-
     }
+}
+
+/**
+ * We don't want to use String literals, so use enums for your language string identifiers
+ */
+enum class UiTexts : Translatable {
+    Title,
+    Cheese,
+    Query,
+    SearchButton,
+    EmptySearch,
+    FoundResults
+    ;
+
+    // language string ids are prefixed and snake cases
+    override val prefix: String = "demo"
 }
 
 private fun RenderContext.searchUi() {
@@ -54,13 +62,17 @@ private fun RenderContext.searchUi() {
         // components are extension functions
         stackUp {
             h1("text-2xl center") {
+                // the translation is a Flow<String>
+                // we can react to changes if we switch language
                 translationStore[UiTexts.Title].renderText(this)
             }
             searchForm()
             searchResults()
+            // obviously not a nice UX, exercise for the reader: make this nicer ;-)
             lineUp {
                 button {
                     +"NL"
+                    // we map the click event to the locale id we want to set
                     clicks.map { Locales.NL_NL.id } handledBy translationStore.updateLocale
                 }
                 button {
@@ -80,7 +92,7 @@ private fun RenderContext.searchForm() {
     lineUp {
         // placeholder takes a string, not a flow so we render the flow of translations
         translationStore[UiTexts.Cheese].render { tl ->
-            inputField(TWClasses.defaultSpaceX) {
+            inputField(TailWindClasses.defaultSpaceX) {
                 value(queryTextStore)
                 type("text")
                 placeholder(tl)

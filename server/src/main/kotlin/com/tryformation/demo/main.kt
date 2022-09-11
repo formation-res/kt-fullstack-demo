@@ -30,12 +30,25 @@ import recipesearch.Recipe
 import recipesearch.RecipeSearch
 
 fun main(args: Array<String>) {
-
     // start ktor, configuration lives in application.conf
     EngineMain.main(args)
 }
 
 fun Application.module() {
+    routing {
+        route("/") {
+            get {
+                call.respond("Hi there!")
+            }
+        }
+        route("/hi") {
+            get {
+                call.respond("Hi back!")
+            }
+        }
+        searchRoutes()
+    }
+
     install(ContentNegotiation) {
         json(
             PRETTY_JSON
@@ -52,16 +65,6 @@ fun Application.module() {
     install(Koin) {
         slf4jLogger(level = Level.DEBUG)
         modules(searchModule)
-    }
-
-
-    routing {
-        route("/") {
-            get {
-                call.respond("hi there!")
-            }
-        }
-        searchRoutes()
     }
 }
 
@@ -121,16 +124,6 @@ fun Routing.searchRoutes() {
         }
         call.respond(response.aggregations["by_tag"]?.asBucketAggregationResult()?:error("oops"))
     }
-
-    get("/q") {
-        val response = repository.search {
-            resultSize=10
-//            agg("by_tag", TermsAgg(Recipe::tags))
-        }
-        call.respond(response.aggregations["by_tag"]?.asBucketAggregationResult()?:error("oops"))
-//        call.respond(response)
-    }
-
 }
 
 // kotlinx serialization defaults are actively harmful

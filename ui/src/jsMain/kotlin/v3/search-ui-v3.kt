@@ -1,14 +1,22 @@
-
 package v3
-import TWClasses.submitButton
-import dev.fritz2.core.*
+
+import TailWindClasses
+import TailWindClasses.submitButton
+import dev.fritz2.core.RenderContext
 import dev.fritz2.headless.components.inputField
+import koin
 import lineUp
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 import stackUp
 
+/**
+ * Replace the handler by one that talks to a server
+ * and add koin for dependency injection.
+ */
 fun RenderContext.v3TalkToOurServer() {
+    // we are not cavemen, let's use dependency injection
+    // koin does not like being started multiple times like we do in this demo
     GlobalContext.stopKoin()
     startKoin {
         modules(searchModule)
@@ -25,10 +33,11 @@ fun RenderContext.v3TalkToOurServer() {
 }
 
 private fun RenderContext.searchForm() {
+    // no changes here
     val searchResultStore by koin.inject<SearchResultStore>()
     val queryTextStore by koin.inject<QueryTextStore>()
     lineUp {
-        inputField(TWClasses.defaultSpaceX) {
+        inputField(TailWindClasses.defaultSpaceX) {
             value(queryTextStore)
             type("text")
             placeholder("cheese")

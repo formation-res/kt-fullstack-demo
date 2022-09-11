@@ -10,6 +10,13 @@ import v6.v6AddTranslations
 
 val router = routerOf("hi")
 
+// a component
+private fun RenderContext.helloWorld() {
+    h1("text-5xl") {
+        +"OHAI!"
+    }
+}
+
 fun main() {
     render("#target") {
         div("flex flex-col h-screen justify-between") {
@@ -29,14 +36,7 @@ fun main() {
             div("h-10") {
                 navigation()
             }
-
         }
     }
 }
 
-// a component
-private fun RenderContext.helloWorld() {
-    h1("text-5xl") {
-        +"OHAI!"
-    }
-}

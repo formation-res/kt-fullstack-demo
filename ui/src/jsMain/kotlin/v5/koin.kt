@@ -5,9 +5,6 @@ package v5
 import com.jillesvangurp.ktsearch.KtorRestClient
 import com.jillesvangurp.ktsearch.SearchClient
 import com.jillesvangurp.ktsearch.repository.repository
-import dev.fritz2.core.RenderContext
-import dev.fritz2.core.RootStore
-import org.koin.core.context.GlobalContext
 import org.koin.dsl.module
 import recipesearch.Recipe
 import recipesearch.RecipeSearch
@@ -24,6 +21,3 @@ val searchModule = module {
     }
     single { RecipeSearch(repository = get(), searchClient = get()) }
 }
-
-val  RenderContext.koin get() = GlobalContext.get()
-val  RootStore<*>.koin get() = GlobalContext.get()

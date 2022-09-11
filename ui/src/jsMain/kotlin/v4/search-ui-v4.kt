@@ -1,9 +1,13 @@
-
 package v4
 
-import TWClasses.submitButton
-import dev.fritz2.core.*
+import TailWindClasses
+import TailWindClasses.submitButton
+import dev.fritz2.core.HtmlTag
+import dev.fritz2.core.RenderContext
+import dev.fritz2.core.href
+import dev.fritz2.core.target
 import dev.fritz2.headless.components.inputField
+import koin
 import lineUp
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
@@ -11,12 +15,17 @@ import org.w3c.dom.HTMLUListElement
 import recipesearch.Recipe
 import stackUp
 
+/**
+ * Use our lib module for model classes. Used in our server as well.
+ *
+ * Update stores to parse the response
+ * Add a component to render a Recipe
+ */
 fun RenderContext.v4UseLibForModels() {
     GlobalContext.stopKoin()
     startKoin {
         modules(searchModule)
     }
-    // OK, let's make this less ugly
     div("container mx-auto font-sans") {
         // components are extension functions
         stackUp {
@@ -31,7 +40,7 @@ private fun RenderContext.searchForm() {
     val searchResultStore by koin.inject<SearchResultStore>()
     val queryTextStore by koin.inject<QueryTextStore>()
     lineUp {
-        inputField(TWClasses.defaultSpaceX) {
+        inputField(TailWindClasses.defaultSpaceX) {
             value(queryTextStore)
             type("text")
             placeholder("cheese")
@@ -47,6 +56,8 @@ private fun RenderContext.searchForm() {
 
 private fun RenderContext.searchResults() {
     val searchResultStore by koin.inject<SearchResultStore>()
+        // The store is a StateFlow of SearchResults<Recipe>?
+        // we react to changes by re-rendering
         searchResultStore.data.render {results ->
             if(results != null) {
                 p {
@@ -66,7 +77,7 @@ private fun RenderContext.searchResults() {
         }
 }
 
-private fun HtmlTag<HTMLUListElement>.recipeResultComponent(it: Recipe) {
+private fun RenderContext.recipeResultComponent(it: Recipe) {
     li {
         a("hover:underline") {
             b {

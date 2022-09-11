@@ -1,9 +1,14 @@
 
 package v5
 
-import TWClasses.submitButton
-import dev.fritz2.core.*
+import TailWindClasses
+import TailWindClasses.submitButton
+import dev.fritz2.core.HtmlTag
+import dev.fritz2.core.RenderContext
+import dev.fritz2.core.href
+import dev.fritz2.core.target
 import dev.fritz2.headless.components.inputField
+import koin
 import lineUp
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
@@ -11,6 +16,11 @@ import org.w3c.dom.HTMLUListElement
 import recipesearch.Recipe
 import stackUp
 
+/**
+ * Replace our serve with the multiplatform library.
+ *
+ * Call Elasticsearch directly from the browser.
+ */
 fun RenderContext.v5UseKtSearch() {
     GlobalContext.stopKoin()
     startKoin {
@@ -31,7 +41,7 @@ private fun RenderContext.searchForm() {
     val searchResultStore by koin.inject<SearchResultStore>()
     val queryTextStore by koin.inject<QueryTextStore>()
     lineUp {
-        inputField(TWClasses.defaultSpaceX) {
+        inputField(TailWindClasses.defaultSpaceX) {
             value(queryTextStore)
             type("text")
             placeholder("cheese")
