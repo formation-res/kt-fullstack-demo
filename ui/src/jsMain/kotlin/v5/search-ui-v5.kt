@@ -24,7 +24,7 @@ import stackUp
 fun RenderContext.v5UseKtSearch() {
     GlobalContext.stopKoin()
     startKoin {
-        modules(searchModule)
+        modules(v5Module)
     }
     // OK, let's make this less ugly
     div("container mx-auto font-sans") {

@@ -19,7 +19,7 @@ fun RenderContext.v3TalkToOurServer() {
     // koin does not like being started multiple times like we do in this demo
     GlobalContext.stopKoin()
     startKoin {
-        modules(searchModule)
+        modules(v3Module)
     }
     // OK, let's make this less ugly
     div("container mx-auto font-sans") {

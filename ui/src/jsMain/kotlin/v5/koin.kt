@@ -9,7 +9,7 @@ import org.koin.dsl.module
 import recipesearch.Recipe
 import recipesearch.RecipeSearch
 
-val searchModule = module {
+val v5Module = module {
     single { QueryTextStore() }
     single { SearchResultStore() }
     single { SearchClient(

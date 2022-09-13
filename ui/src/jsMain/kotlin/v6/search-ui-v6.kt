@@ -31,7 +31,7 @@ fun RenderContext.v6AddTranslations() {
     GlobalContext.stopKoin()
     GlobalScope.launch {
         startKoin {
-            modules(searchModule)
+            modules(v6Module)
         }
         // little hack to get this to load in a co-routine scope because resource loading is suspending
         koin.declare(TranslationStore.load(fallback = "en-GB"))

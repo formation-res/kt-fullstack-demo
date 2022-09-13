@@ -2,7 +2,6 @@ package v4
 
 import TailWindClasses
 import TailWindClasses.submitButton
-import dev.fritz2.core.HtmlTag
 import dev.fritz2.core.RenderContext
 import dev.fritz2.core.href
 import dev.fritz2.core.target
@@ -11,7 +10,6 @@ import koin
 import lineUp
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
-import org.w3c.dom.HTMLUListElement
 import recipesearch.Recipe
 import stackUp
 
@@ -24,7 +22,7 @@ import stackUp
 fun RenderContext.v4UseLibForModels() {
     GlobalContext.stopKoin()
     startKoin {
-        modules(searchModule)
+        modules(v4Module)
     }
     div("container mx-auto font-sans") {
         // components are extension functions

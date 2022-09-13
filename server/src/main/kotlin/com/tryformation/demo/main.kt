@@ -7,7 +7,6 @@ import com.jillesvangurp.ktsearch.index
 import com.jillesvangurp.ktsearch.repository.IndexRepository
 import com.jillesvangurp.searchdsls.querydsl.TermsAgg
 import com.jillesvangurp.searchdsls.querydsl.agg
-import io.ktor.client.plugins.logging.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -49,11 +48,13 @@ fun Application.module() {
         searchRoutes()
     }
 
+    // serialize/deserialize responses using kotlinx.serialization
     install(ContentNegotiation) {
         json(
             PRETTY_JSON
         )
     }
+    // we need this for our UI to be able to talk to ktor
     install(CORS) {
         allowMethod(HttpMethod.Options)
         allowMethod(HttpMethod.Post)
@@ -62,6 +63,7 @@ fun Application.module() {
         allowHeader(HttpHeaders.ContentType)
         anyHost()
     }
+    // We like some dependency injection
     install(Koin) {
         slf4jLogger(level = Level.DEBUG)
         modules(searchModule)
