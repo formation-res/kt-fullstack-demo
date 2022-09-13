@@ -21,18 +21,18 @@ class TranslationStore(
 
     operator fun get(translatable: Translatable, json: Map<String, Any>? = null): Flow<String> {
         return data.map { bundleSequence ->
-            bundleSequence.translate(translatable, args = json)
+            bundleSequence.format(translatable, args = json)
         }.map { it.message }
     }
 
     operator fun get(translatable: Translatable, jsonFlow: Flow<Map<String, Any>>): Flow<String> {
         return data.combine(jsonFlow) { bundleSeq, json ->
-            bundleSeq.translate(translatable, args = json).message
+            bundleSeq.format(translatable, args = json).message
         }
     }
 
     fun getString(translatable: Translatable, json: Map<String, Any>? = null): String {
-        return current.translate(translatable, args = json).message
+        return current.format(translatable, args = json).message
     }
 
     val updateLocale = handle<String> { _, newLocale ->
