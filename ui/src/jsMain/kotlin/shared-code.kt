@@ -24,14 +24,21 @@ fun RenderContext.stackUp(classes: String = TailWindClasses.defaultSpaceY, block
 }
 
 fun RenderContext.navigation() {
-    p {
-        +"Full Stack Kotlin Demo: "
-        (listOf("hi") + (1..6).map { it.toString() }).forEach {
-            a("link") {
-                +it
-                href("/#$it")
+    router.data.render { currentPage ->
+        p {
+            +"Full Stack Kotlin Demo: "
+            (listOf("hi") + (1..6).map { it.toString() }).forEach { navigationItem ->
+                val style = if (currentPage == navigationItem) {
+                    "link underline text-red-400 decoration-red-400"
+                } else {
+                    "link"
+                }
+                a(style) {
+                    +navigationItem
+                    href("/#$navigationItem")
+                }
+                +" "
             }
-            +" "
         }
     }
 }
