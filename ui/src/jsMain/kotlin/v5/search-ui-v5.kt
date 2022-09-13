@@ -9,6 +9,7 @@ import dev.fritz2.core.href
 import dev.fritz2.core.target
 import dev.fritz2.headless.components.inputField
 import koin
+import kotlinx.coroutines.flow.filter
 import lineUp
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
@@ -46,7 +47,11 @@ private fun RenderContext.searchForm() {
             type("text")
             placeholder("cheese")
             label { +"Query" }
-            inputTextfield {  }
+            inputTextfield {
+                keyups.filter {
+                    it.keyCode == 13
+                } handledBy searchResultStore.search
+            }
         }
         button(submitButton) {
             +"Search"

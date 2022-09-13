@@ -5,6 +5,7 @@ import dev.fritz2.core.RenderContext
 import dev.fritz2.core.RootStore
 import dev.fritz2.core.storeOf
 import dev.fritz2.headless.components.inputField
+import kotlinx.coroutines.flow.filter
 import lineUp
 import stackUp
 
@@ -34,7 +35,11 @@ private fun RenderContext.searchForm() {
             type("text")
             placeholder("cheese")
             label { +"Query" }
-            inputTextfield {  }
+            inputTextfield {
+                keyups.filter {
+                    it.keyCode == 13
+                } handledBy SearchFieldStore.search
+            }
         }
         button(submitButton) {
             +"Search"

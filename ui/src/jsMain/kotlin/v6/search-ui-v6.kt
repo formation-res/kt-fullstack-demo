@@ -11,6 +11,7 @@ import dev.fritz2.headless.components.inputField
 import koin
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import lineUp
@@ -97,7 +98,11 @@ private fun RenderContext.searchForm() {
                 type("text")
                 placeholder(tl)
                 label { translationStore[UiTexts.Query].renderText(this) }
-                inputTextfield { }
+                inputTextfield {
+                    keyups.filter {
+                        it.keyCode == 13
+                    } handledBy searchResultStore.search
+                }
             }
         }
         button(submitButton) {
