@@ -34,9 +34,13 @@ class RecipeSearch(
                 number<Int>("prep_time_min")
                 number<Int>("cook_time_min")
                 number<Int>("servings")
-                keyword("tags")
+                keyword("tags") {
+                    copyTo = listOf("allfields")
+                }
                 objField("author") {
-                    text("name")
+                    text("name") {
+                        copyTo = listOf("allfields")
+                    }
                     keyword("url")
                 }
             }
@@ -84,16 +88,12 @@ class RecipeSearch(
                                     boost=1.5
                                     fuzziness="auto"
                                 },
-                                match(Recipe::tags, text) {
+                                match("allfields", text) {
                                     fuzziness="auto"
                                 },
                                 matchPhrasePrefix(Recipe::title, text) {
                                    boost=0.25
                                 },
-                                matchPhrasePrefix(Recipe::tags, text) {
-                                   boost=0.05
-                                },
-                                match("description", text)
                             )
                         }
                     }
