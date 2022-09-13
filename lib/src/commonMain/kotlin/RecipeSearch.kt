@@ -4,10 +4,7 @@ package recipesearch
 
 import com.jillesvangurp.ktsearch.*
 import com.jillesvangurp.ktsearch.repository.IndexRepository
-import com.jillesvangurp.searchdsls.querydsl.bool
-import com.jillesvangurp.searchdsls.querydsl.match
-import com.jillesvangurp.searchdsls.querydsl.matchAll
-import com.jillesvangurp.searchdsls.querydsl.matchPhrase
+import com.jillesvangurp.searchdsls.querydsl.*
 
 class RecipeSearch(
     private val repository: IndexRepository<Recipe>,
@@ -87,9 +84,17 @@ class RecipeSearch(
                                     boost=1.5
                                     fuzziness="auto"
                                 },
+                                match(Recipe::tags, text) {
+                                    fuzziness="auto"
+                                },
+                                matchPhrasePrefix(Recipe::title, text) {
+                                   boost=0.25
+                                },
+                                matchPhrasePrefix(Recipe::tags, text) {
+                                   boost=0.05
+                                },
                                 match("description", text)
                             )
-                            this["foo"] = "bar"
                         }
                     }
             }
