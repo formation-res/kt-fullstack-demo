@@ -8,6 +8,7 @@ import dev.fritz2.core.RenderContext
 import dev.fritz2.core.href
 import dev.fritz2.core.target
 import dev.fritz2.headless.components.inputField
+import dev.fritz2.headless.components.listbox
 import koin
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -59,27 +60,33 @@ enum class UiTexts : Translatable {
 
 private fun RenderContext.searchUi() {
     val translationStore by koin.inject<TranslationStore>()
-    div("container mx-auto font-sans") {
-        // components are extension functions
-        stackUp {
-            h1("text-2xl center") {
-                // the translation is a Flow<String>
-                // we can react to changes if we switch language
-                translationStore[UiTexts.Title].renderText(this)
+    div("flex flex-col justify-between h-full") {
+        div("container mx-auto font-sans") {
+            // components are extension functions
+            stackUp {
+                h1("text-2xl center") {
+                    // the translation is a Flow<String>
+                    // we can react to changes if we switch language
+                    translationStore[UiTexts.Title].renderText(this)
+                }
+                searchForm()
+                searchResults()
+                // obviously not a nice UX, exercise for the reader: make this nicer ;-)
             }
-            searchForm()
-            searchResults()
-            // obviously not a nice UX, exercise for the reader: make this nicer ;-)
-            lineUp {
-                button {
-                    +"NL"
-                    // we map the click event to the locale id we want to set
-                    clicks.map { Locales.NL_NL.id } handledBy translationStore.updateLocale
-                }
-                button {
-                    +"EN"
-                    clicks.map { Locales.EN_GB.id } handledBy translationStore.updateLocale
-                }
+        }
+        lineUp() {
+            button {
+                +"Dutch"
+                // we map the click event to the locale id we want to set
+                clicks.map { Locales.NL_NL.id } handledBy translationStore.updateLocale
+            }
+            button {
+                +"British English"
+                clicks.map { Locales.EN_GB.id } handledBy translationStore.updateLocale
+            }
+            button {
+                +"US English"
+                clicks.map { Locales.EN_US.id } handledBy translationStore.updateLocale
             }
         }
     }

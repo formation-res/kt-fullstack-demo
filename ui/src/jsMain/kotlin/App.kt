@@ -20,7 +20,7 @@ private fun RenderContext.helloWorld() {
 fun main() {
     render("#target") {
         div("flex flex-col h-screen justify-between") {
-            div("mb-auto") {
+            div("mb-auto h-full w-full") {
                 router.data.render { page ->
                     when(page) {
                         "hi" -> helloWorld()
