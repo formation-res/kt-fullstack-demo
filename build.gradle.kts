@@ -13,12 +13,13 @@ subprojects {
 
     repositories {
         mavenCentral()
-        maven("https://maven.tryformation.com/releases") {
-            content {
-                includeGroup("com.jillesvangurp")
-                includeGroup("com.tryformation")
-            }
-        }
+        maven("https://jitpack.io")
+//        maven("https://maven.tryformation.com/releases") {
+//            content {
+//                includeGroup("com.jillesvangurp")
+//                includeGroup("com.tryformation")
+//            }
+//        }
     }
 
     tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile> {

@@ -3,10 +3,7 @@ package v6
 import TailWindClasses
 import TailWindClasses.submitButton
 import com.tryformation.localization.Translatable
-import dev.fritz2.core.HtmlTag
-import dev.fritz2.core.RenderContext
-import dev.fritz2.core.href
-import dev.fritz2.core.target
+import dev.fritz2.core.*
 import dev.fritz2.headless.components.inputField
 import dev.fritz2.headless.components.listbox
 import koin
@@ -102,10 +99,10 @@ private fun RenderContext.searchForm() {
         translationStore[UiTexts.Cheese].render { tl ->
             inputField(TailWindClasses.defaultSpaceX) {
                 value(queryTextStore)
-                type("text")
-                placeholder(tl)
                 label { translationStore[UiTexts.Query].renderText(this) }
                 inputTextfield {
+                    type("text")
+                    placeholder(tl)
                     keyups.filter {
                         it.keyCode == 13
                     } handledBy searchResultStore.search

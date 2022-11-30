@@ -2,7 +2,6 @@
 
 plugins {
     kotlin("multiplatform")
-    id("com.google.devtools.ksp")
 }
 
 kotlin {
@@ -20,7 +19,7 @@ kotlin {
             dependencies {
                 implementation("dev.fritz2:core:_")
                 implementation("dev.fritz2:headless:_")
-                implementation("com.jillesvangurp:search-client:_")
+                implementation("com.github.jillesvangurp.kt-search:search-client:_")
                 implementation(KotlinX.serialization.json)
                 implementation(Koin.core)
                 implementation(project(":lib"))
@@ -33,7 +32,7 @@ kotlin {
                 implementation(npm("@tailwindcss/forms", "0.4.0"))
 
                 // fluent-js
-                implementation("com.tryformation:fluent-kotlin:_")
+                implementation("com.github.formation-res:fluent-kotlin:_")
 //                implementation(npm("@fluent/bundle", "0.17.1"))
 //                implementation(npm("@fluent/sequence", "0.7.0"))
 
@@ -46,13 +45,6 @@ kotlin {
                 implementation(devNpm("cssnano", "5.0.17"))            }
         }
     }
-}
-
-/**
- * KSP support - start
- */
-ksp {
-
 }
 
 

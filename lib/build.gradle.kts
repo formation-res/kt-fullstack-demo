@@ -25,7 +25,9 @@ kotlin {
             dependencies {
                 api(kotlin("stdlib-common", "_"))
                 api(KotlinX.serialization.json)
-                api("com.jillesvangurp:search-client:_")
+                api("com.github.jillesvangurp.kt-search:search-client:_")
+                api("com.github.jillesvangurp.kt-search:search-dsls:_")
+                api("com.github.jillesvangurp.kt-search:json-dsl:_")
                 api("io.github.microutils:kotlin-logging:_")
             }
         }

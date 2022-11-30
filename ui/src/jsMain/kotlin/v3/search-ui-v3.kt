@@ -3,6 +3,8 @@ package v3
 import TailWindClasses
 import TailWindClasses.submitButton
 import dev.fritz2.core.RenderContext
+import dev.fritz2.core.placeholder
+import dev.fritz2.core.type
 import dev.fritz2.headless.components.inputField
 import koin
 import kotlinx.coroutines.flow.filter
@@ -10,7 +12,6 @@ import lineUp
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 import stackUp
-import v2.SearchFieldStore
 
 /**
  * Replace the handler by one that talks to a server
@@ -41,10 +42,10 @@ private fun RenderContext.searchForm() {
     lineUp {
         inputField(TailWindClasses.defaultSpaceX) {
             value(queryTextStore)
-            type("text")
-            placeholder("cheese")
             label { +"Query" }
             inputTextfield {
+                type("text")
+                placeholder("cheese")
                 keyups.filter {
                     it.keyCode == 13
                 } handledBy searchResultStore.search

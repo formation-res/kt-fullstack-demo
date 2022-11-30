@@ -1,9 +1,7 @@
 package v2
 import TailWindClasses
 import TailWindClasses.submitButton
-import dev.fritz2.core.RenderContext
-import dev.fritz2.core.RootStore
-import dev.fritz2.core.storeOf
+import dev.fritz2.core.*
 import dev.fritz2.headless.components.inputField
 import kotlinx.coroutines.flow.filter
 import lineUp
@@ -32,10 +30,11 @@ private fun RenderContext.searchForm() {
         inputField(TailWindClasses.defaultSpaceX) {
             // input values are stored in a store
             value(SearchFieldStore)
-            type("text")
-            placeholder("cheese")
+
             label { +"Query" }
             inputTextfield {
+                type("text")
+                placeholder("cheese")
                 keyups.filter {
                     it.keyCode == 13
                 } handledBy SearchFieldStore.search
