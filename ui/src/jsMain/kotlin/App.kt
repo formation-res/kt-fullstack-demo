@@ -19,8 +19,8 @@ private fun RenderContext.helloWorld() {
 
 fun main() {
     render("#target") {
-        div("flex flex-col h-screen justify-between") {
-            div("mb-auto h-full w-full") {
+        div("flex flex-col h-screen justify-between overflow-scroll") {
+            div("mb-auto w-full") {
                 router.data.render { page ->
                     when(page) {
                         "hi" -> helloWorld()

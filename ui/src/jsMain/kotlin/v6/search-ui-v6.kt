@@ -5,7 +5,6 @@ import TailWindClasses.submitButton
 import com.tryformation.localization.Translatable
 import dev.fritz2.core.*
 import dev.fritz2.headless.components.inputField
-import dev.fritz2.headless.components.listbox
 import koin
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -48,6 +47,8 @@ enum class UiTexts : Translatable {
     Query,
     SearchButton,
     EmptySearch,
+    Ingredients,
+    Steps,
     FoundResults
     ;
 
@@ -58,7 +59,7 @@ enum class UiTexts : Translatable {
 private fun RenderContext.searchUi() {
     val translationStore by koin.inject<TranslationStore>()
     div("flex flex-col justify-between h-full") {
-        div("container mx-auto font-sans") {
+        div("container mx-auto font-sans overflow-scroll") {
             // components are extension functions
             stackUp {
                 h1("text-2xl center") {
@@ -123,9 +124,11 @@ private fun RenderContext.searchResults() {
     searchResultStore.data.render { results ->
         if (results != null) {
             p {
-                translationStore[UiTexts.FoundResults, mapOf("amount" to results.totalHits.toString())].renderText(this)
+                translationStore[UiTexts.FoundResults, mapOf("amount" to results.totalHits.toString())].renderText(
+                    this
+                )
             }
-            ul {
+            div {
                 results.items.forEach {
                     recipeResultComponent(it)
                 }
@@ -138,23 +141,41 @@ private fun RenderContext.searchResults() {
     }
 }
 
-private fun HtmlTag<HTMLUListElement>.recipeResultComponent(it: Recipe) {
-    li {
+private fun RenderContext.recipeResultComponent(recipe: Recipe) {
+    val translationStore by koin.inject<TranslationStore>()
+    div("max-w-sm rounded overflow-hidden shadow-lg m-2") {
         a("hover:underline") {
             b {
-                +it.title
+                +recipe.title
             }
-            it.sourceUrl?.let { link ->
+            recipe.sourceUrl?.let { link ->
                 href(link)
                 target("_blank")
             }
         }
         a("hover:underline") {
-            href(it.author.url)
+            href(recipe.author.url)
             target("_blank")
-            +" (${it.author.name})"
+            +" (${recipe.author.name})"
         }
-        +" ${it.tags?.joinToString(", ")}"
+        +" ${recipe.tags?.joinToString(", ")}"
+        h4 {
+            translationStore[UiTexts.Ingredients].renderText(this)
+        }
+        ul("list-disc list-inside") {
+            recipe.ingredients.forEach { step ->
+                li { +step }
+            }
+        }
+        h4 {
+            translationStore[UiTexts.Steps].renderText(this)
+        }
+        ul("list-disc list-inside") {
+            recipe.directions.forEach { step ->
+                li { +step }
+            }
+        }
+
     }
 }
 

@@ -19,7 +19,7 @@ class RecipeSearch(
         repository.createIndex(block = {
             mappings {
                 text("allfields")
-                text("title") {
+                text(Recipe::title) {
                     copyTo = listOf("allfields")
                     fields {
                         text("autocomplete") {
@@ -28,20 +28,22 @@ class RecipeSearch(
                         }
                     }
                 }
-                text("description") {
+                text(Recipe::description) {
                     copyTo = listOf("allfields")
                 }
-                number<Int>("prep_time_min")
-                number<Int>("cook_time_min")
-                number<Int>("servings")
-                keyword("tags") {
+                text(Recipe::ingredients)
+                text(Recipe::directions)
+                number<Int>(Recipe::prepTimeMin)
+                number<Int>(Recipe::cookTimeMin)
+                number<Int>(Recipe::servings)
+                keyword(Recipe::tags) {
                     copyTo = listOf("allfields")
                 }
-                objField("author") {
-                    text("name") {
+                objField(Recipe::author) {
+                    text(Author::name) {
                         copyTo = listOf("allfields")
                     }
-                    keyword("url")
+                    keyword(Author::url)
                 }
             }
             settings {
@@ -84,7 +86,7 @@ class RecipeSearch(
                                 matchPhrase(Recipe::title, text) {
                                     boost=2.0
                                 },
-                                match("title", text) {
+                                match(Recipe::title, text) {
                                     boost=1.5
                                     fuzziness="auto"
                                 },
@@ -93,6 +95,12 @@ class RecipeSearch(
                                 },
                                 matchPhrasePrefix(Recipe::title, text) {
                                    boost=0.25
+                                },
+                                match(Recipe::directions, text) {
+                                    boost=0.1
+                                },
+                                match(Recipe::ingredients, text) {
+                                    boost=0.1
                                 },
                             )
                         }

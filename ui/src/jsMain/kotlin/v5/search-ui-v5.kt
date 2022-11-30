@@ -64,7 +64,7 @@ private fun RenderContext.searchResults() {
                 p {
                     +"Found ${results.totalHits} recipes!"
                 }
-                ul {
+                div {
                     results.items.forEach {
                         recipeResultComponent(it)
                     }
@@ -78,25 +78,46 @@ private fun RenderContext.searchResults() {
         }
 }
 
-private fun HtmlTag<HTMLUListElement>.recipeResultComponent(it: Recipe) {
-    li {
-        a("hover:underline") {
-            b {
-                +it.title
+private fun RenderContext.recipeResultComponent(recipe: Recipe) {
+    div("max-w-sm rounded overflow-hidden shadow-lg m-2") {
+        h3 {
+            a("hover:underline") {
+                b {
+                    +recipe.title
+                }
+                recipe.sourceUrl?.let { link ->
+                    href(link)
+                    target("_blank")
+                }
             }
-            it.sourceUrl?.let { link ->
-                href(link)
+        }
+        p {
+            a("hover:underline") {
+                href(recipe.author.url)
                 target("_blank")
+                +" (${recipe.author.name})"
+            }
+            +" ${recipe.tags?.joinToString(", ")}"
+        }
+        h4 {
+            +"Ingredients"
+        }
+        ul("list-disc list-inside") {
+            recipe.ingredients.forEach { step ->
+                li { +step }
             }
         }
-        a("hover:underline") {
-            href(it.author.url)
-            target("_blank")
-            +" (${it.author.name})"
+        h4 {
+            +"Steps"
         }
-        +" ${it.tags?.joinToString(", ")}"
+        ul("list-disc list-inside") {
+            recipe.directions.forEach { step ->
+                li { +step }
+            }
+        }
     }
 }
+
 
 
 

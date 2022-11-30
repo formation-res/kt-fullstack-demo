@@ -3,7 +3,6 @@ package recipesearch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 data class Recipe(
     val title: String,
