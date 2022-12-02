@@ -11,9 +11,9 @@ The project implements a little recipe search engine to demonstrate a few things
 
 The project has three kotlin modules:
 
-- `lib`: this is a small multi platform kotlin library that is used in both server and ui
+- `lib`: this is a small multi platform kotlin library that implements recipe search using [kt-search](https://github.com/jillesvangurp/kt-search) that is used in both server and ui
 - `server`: a small ktor server that implements a REST API
-- `ui`: a [Fritz2](https://www.fritz2.dev/) based web application
+- `ui`: a [Fritz2](https://www.fritz2.dev/) based web application with several versions of the search UI. v4 uses ktor v5 and v6 embed the kotlin-js version of lib and talk to elasticsearch directly.
 
 ## Getting started
 
