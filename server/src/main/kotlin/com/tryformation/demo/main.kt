@@ -2,9 +2,10 @@
 
 package com.tryformation.demo
 
-import com.jillesvangurp.ktsearch.asBucketAggregationResult
 import com.jillesvangurp.ktsearch.index
+import com.jillesvangurp.ktsearch.parsedBuckets
 import com.jillesvangurp.ktsearch.repository.IndexRepository
+import com.jillesvangurp.ktsearch.termsResult
 import com.jillesvangurp.searchdsls.querydsl.TermsAgg
 import com.jillesvangurp.searchdsls.querydsl.agg
 import io.ktor.http.*
@@ -124,7 +125,10 @@ fun Routing.searchRoutes() {
         val response = repository.search {
             agg("by_tag", TermsAgg(Recipe::tags))
         }
-        call.respond(response.aggregations["by_tag"]?.asBucketAggregationResult()?:error("oops"))
+        val counts = response.aggregations.termsResult("by_tag").parsedBuckets.map {
+            it.parsed.key to it.parsed.docCount
+        }
+        call.respond(counts)
     }
 }
 

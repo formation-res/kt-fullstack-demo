@@ -6,25 +6,25 @@ buildscript {
 
 plugins {
     kotlin("multiplatform") apply false
-    id("com.google.devtools.ksp") version "1.7.0-1.0.6" apply false
+//    id("com.google.devtools.ksp") version "1.7.0-1.0.6" apply false
 }
 
 subprojects {
 
     repositories {
         mavenCentral()
-        maven("https://jitpack.io")
-//        maven("https://maven.tryformation.com/releases") {
-//            content {
-//                includeGroup("com.jillesvangurp")
-//                includeGroup("com.tryformation")
-//            }
-//        }
+//        maven("https://jitpack.io")
+        maven("https://maven.tryformation.com/releases") {
+            content {
+                includeGroup("com.jillesvangurp")
+                includeGroup("com.tryformation")
+            }
+        }
     }
 
     tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile> {
         kotlinOptions {
-            jvmTarget = "11"
+            jvmTarget = "17"
             languageVersion = "1.7"
         }
     }
