@@ -28,8 +28,8 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 // tailwind
-                implementation(npm("tailwindcss", "3.0.19"))
-                implementation(npm("@tailwindcss/forms", "0.4.0"))
+                implementation(npm("tailwindcss", "_"))
+                implementation(npm("@tailwindcss/forms", "_"))
 
                 // fluent-js
                 implementation("com.tryformation:fluent-kotlin:_")
@@ -37,12 +37,12 @@ kotlin {
 //                implementation(npm("@fluent/sequence", "0.7.0"))
 
                 // webpack
-                implementation(devNpm("postcss", "8.4.6"))
-                implementation(devNpm("postcss-loader", "6.2.1"))
-                implementation(devNpm("autoprefixer", "10.4.2"))
-                implementation(devNpm("css-loader", "6.6.0"))
-                implementation(devNpm("style-loader", "3.3.1"))
-                implementation(devNpm("cssnano", "5.0.17"))            }
+                implementation(devNpm("postcss", "_"))
+                implementation(devNpm("postcss-loader", "_"))
+                implementation(devNpm("autoprefixer", "_"))
+                implementation(devNpm("css-loader", "_"))
+                implementation(devNpm("style-loader", "_"))
+                implementation(devNpm("cssnano", "_"))            }
         }
     }
 }
@@ -50,6 +50,6 @@ kotlin {
 
 // Fixes webpack-cli incompatibility by pinning the newest version.
 // https://youtrack.jetbrains.com/issue/KTIJ-22030
-rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
-    versions.webpackCli.version = "4.10.0"
-}
+//rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
+//    versions.webpackCli.version = "4.10.0"
+//}
