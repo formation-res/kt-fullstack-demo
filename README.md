@@ -1,8 +1,9 @@
 # Demo Project
 
-This demo was created to support presentations at the Kotlin Virtual User group, the Opensearch community, and the ELasticsearch Meetups.
+This demo was created to support presentations at the Kotlin Virtual User group, the Opensearch community, and the ELasticsearch Meetups. You can watch the full presentation here:
+https://www.youtube.com/watch?v=c6wcpM3EuRg&t=1s
 
-The project implements a UI and server for a little recipe search engine to demonstrate a few things:
+This demo project implements a UI and server for a little recipe search engine to demonstrate a few things:
 
 1. How awesome multi platform Kotlin is and how you can use it as a Fullstack platform. It's used for both frontend (Browser/JS) and backend code (JVM)
 1. Our **[kt-search](https://github.com/jillesvangurp/kt-search)** client for Opensearch and Elasticsearch. This was developed over many years by FORMATION CTO Jilles and we use this for our main app as well. This demoes a few of its features both running both on the JVM (ktor) and in a kotlin web UI via kotlin-js.
