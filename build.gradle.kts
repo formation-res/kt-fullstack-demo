@@ -6,7 +6,6 @@ buildscript {
 
 plugins {
     kotlin("multiplatform") apply false
-//    id("com.google.devtools.ksp") version "1.7.0-1.0.6" apply false
 }
 
 subprojects {
@@ -18,6 +17,7 @@ subprojects {
             content {
                 includeGroup("com.jillesvangurp")
                 includeGroup("com.tryformation")
+                includeGroup("com.tryformation.fritz2")
             }
         }
     }

@@ -17,8 +17,8 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
-                implementation("dev.fritz2:core:_")
-                implementation("dev.fritz2:headless:_")
+                implementation("com.tryformation.fritz2:core:_")
+                implementation("com.tryformation.fritz2:headless:_")
                 implementation("com.jillesvangurp:search-client:_")
                 implementation(KotlinX.serialization.json)
                 implementation(Koin.core)
@@ -33,8 +33,6 @@ kotlin {
 
                 // fluent-js
                 implementation("com.tryformation:fluent-kotlin:_")
-//                implementation(npm("@fluent/bundle", "0.17.1"))
-//                implementation(npm("@fluent/sequence", "0.7.0"))
 
                 // webpack
                 implementation(devNpm("postcss", "_"))
@@ -46,10 +44,3 @@ kotlin {
         }
     }
 }
-
-
-// Fixes webpack-cli incompatibility by pinning the newest version.
-// https://youtrack.jetbrains.com/issue/KTIJ-22030
-//rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
-//    versions.webpackCli.version = "4.10.0"
-//}
