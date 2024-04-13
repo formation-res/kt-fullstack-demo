@@ -22,12 +22,12 @@ subprojects {
         }
     }
 
-    tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile> {
-        kotlinOptions {
-            jvmTarget = "17"
-            languageVersion = "1.7"
-        }
-    }
+//    tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile> {
+//        kotlinOptions {
+//            jvmTarget = "21"
+//            languageVersion = "2.0"
+//        }
+//    }
 
     tasks.withType<Test> {
         useJUnitPlatform()

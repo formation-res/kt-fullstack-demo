@@ -30,3 +30,5 @@ book.epub
 secring.gpg
 local.properties
 localRepo
+
+.kotlin

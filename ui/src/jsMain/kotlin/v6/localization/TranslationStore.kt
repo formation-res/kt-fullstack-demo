@@ -9,6 +9,7 @@ import dev.fritz2.core.RootStore
 import dev.fritz2.core.storeOf
 import dev.fritz2.remote.http
 import kotlinx.browser.window
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -16,8 +17,8 @@ import kotlinx.coroutines.flow.map
 class TranslationStore(
     bundleSequence: LocalizedTranslationBundleSequence,
     private val defaultLanguage: String = Locales.NL_NL.id
-) : RootStore<LocalizedTranslationBundleSequence>(bundleSequence) {
-    private val languageCodeStore = storeOf(defaultLanguage)
+) : RootStore<LocalizedTranslationBundleSequence>(bundleSequence, Job()) {
+    private val languageCodeStore = storeOf(defaultLanguage, Job())
 
     operator fun get(translatable: Translatable, json: Map<String, Any>? = null): Flow<String> {
         return data.map { bundleSequence ->

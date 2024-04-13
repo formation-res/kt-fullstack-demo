@@ -1,5 +1,3 @@
-@file:Suppress("UNUSED_VARIABLE")
-
 plugins {
     kotlin("multiplatform")
 }
@@ -15,7 +13,7 @@ kotlin {
                 optIn("kotlin.ExperimentalStdlibApi")
             }
         }
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation("com.tryformation.fritz2:core:_")
                 implementation("com.tryformation.fritz2:headless:_")
@@ -25,7 +23,7 @@ kotlin {
                 implementation(project(":lib"))
             }
         }
-        val jsMain by getting {
+        jsMain {
             dependencies {
                 // tailwind
                 implementation(npm("tailwindcss", "_"))

@@ -3,6 +3,7 @@ import TailWindClasses
 import TailWindClasses.submitButton
 import dev.fritz2.core.*
 import dev.fritz2.headless.components.inputField
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filter
 import lineUp
 import stackUp
@@ -65,10 +66,10 @@ private fun RenderContext.searchResults() {
 // It's Kotlin, so we have types and generics ..
 
 // this where search results will live, assume we have strings for now ...
-val resultStore = storeOf(listOf<String>())
+val resultStore = storeOf(listOf<String>(), Job())
 
 // our search field also has state but we also need behavior
-object SearchFieldStore: RootStore<String>("") {
+object SearchFieldStore: RootStore<String>("", Job()) {
     // when you click the button, it is handled here
     val search = handle { query ->
         if(query.isNotBlank()) {

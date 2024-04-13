@@ -1,27 +1,14 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-
 plugins {
     id("org.jetbrains.kotlin.jvm")
     kotlin("plugin.serialization")
-
 }
 
 sourceSets {
+
     main {
         kotlin {
         }
     }
-}
-
-tasks.withType<KotlinCompile> {
-
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
-        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
-    }
-
 }
 
 dependencies {

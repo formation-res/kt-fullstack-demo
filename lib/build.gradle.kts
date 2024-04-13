@@ -21,7 +21,7 @@ kotlin {
         }
     }
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(kotlin("stdlib-common", "_"))
                 api(KotlinX.serialization.json)
@@ -31,7 +31,7 @@ kotlin {
                 api("io.github.microutils:kotlin-logging:_")
             }
         }
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(kotlin("test-common", "_"))
                 implementation(kotlin("test-annotations-common", "_"))
@@ -39,11 +39,11 @@ kotlin {
 
             }
         }
-        val jvmMain by existing {
+        jvmMain {
             dependencies {
             }
         }
-        val jvmTest by getting {
+        jvmTest {
             dependencies {
                 implementation(kotlin("test-junit5", "_"))
                 implementation("ch.qos.logback:logback-classic:_")
@@ -52,11 +52,11 @@ kotlin {
                 implementation(Testing.junit.jupiter.engine)
             }
         }
-        val jsMain by existing {
+        jsMain {
             dependencies {
             }
         }
-        val jsTest by getting {
+        jsTest {
             dependencies {
                 implementation(kotlin("test-js", "_"))
             }

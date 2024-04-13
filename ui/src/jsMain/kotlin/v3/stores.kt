@@ -4,10 +4,11 @@ import dev.fritz2.core.RootStore
 import dev.fritz2.remote.http
 import dev.fritz2.routing.encodeURIComponent
 import koin
+import kotlinx.coroutines.Job
 
-class QueryTextStore: RootStore<String>("")
+class QueryTextStore: RootStore<String>("", Job())
 
-class SearchResultStore : RootStore<String?>(null) {
+class SearchResultStore : RootStore<String?>(null, Job()) {
     val queryTextStore by koin.inject<QueryTextStore>()
 
     val search = handle {
