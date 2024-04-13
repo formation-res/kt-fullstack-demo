@@ -128,8 +128,7 @@ inline fun <reified T:Any> SearchResponse.toSearchResults(): SearchResults<T> {
     val response = this
     val collectedHits = mutableListOf<T>()
     response.parseHits<T>().forEach {
-        if(it != null)
-            collectedHits.add(it)
+        collectedHits.add(it)
     }
     return SearchResults(response.total, collectedHits)
 }
