@@ -31,6 +31,8 @@ import recipesearch.RecipeSearch
 
 fun main(args: Array<String>) {
     // start ktor, configuration lives in application.conf
+    // then execute this to bootstrap
+    // curl -XPOST localhost:9090/bootstrap
     EngineMain.main(args)
 }
 
